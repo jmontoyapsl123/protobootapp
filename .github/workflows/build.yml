@@ -44,7 +44,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=jmontoyapsl123_protobootapp -Pcoverage
+        run: mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=jmontoyapsl123_protobootapp
       - name: Login to Heroku Container registry
         env: 
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
@@ -53,4 +53,4 @@ jobs:
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
           HEROKU_APP_NAME: protobootapp
-        run: heroku plugins:install java && heroku create --no-remote && heroku deploy:jar dev/githubactions-0.0.1-SNAPSHOT.jar --app protobootapp
+        run: heroku plugins:install java && heroku create --no-remote && heroku deploy:jar dev/protobootapp_github_actions.jar --app protobootapp
