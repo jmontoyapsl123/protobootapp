@@ -21,6 +21,13 @@ jobs:
           cache: maven
       - name: Build with Maven
         run: mvn -B install --file pom.xml
+      - name: Create build path dev
+        run: mkdir dev && cp target/*.jar dev
+      - name: Upload math result for job
+        uses: actions/upload-artifact@v1
+        with:
+          name: protobootapp_github_actions
+          path: dev
       - name: Cache SonarCloud packages
         uses: actions/cache@v1
         with:
@@ -33,8 +40,17 @@ jobs:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
-      - name: Build and analyze
+      - name: SonarCloud Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=jmontoyapsl123_protobootapp -Pcoverage
+      - name: Login to Heroku Container registry
+        env: 
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: heroku container:login
+      - name: Heroku Build and push
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+          HEROKU_APP_NAME: protobootapp
+        run: heroku plugins:install java && heroku create --no-remote && heroku deploy:jar staging/githubactions-0.0.1-SNAPSHOT.jar --app protobootapp
