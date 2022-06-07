@@ -53,4 +53,4 @@ jobs:
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
           HEROKU_APP_NAME: protobootapp
-        run: heroku plugins:install java && heroku create protobootapp --no-remote && heroku deploy:jar dev/protobootapp-0.0.1-SNAPSHOT.jar --jdk 11 --app protobootapp
+        run: heroku plugins:install java && heroku create protobootapp --no-remote && heroku deploy:jar dev/protobootapp-0.0.1-SNAPSHOT.jar --jdk 11 -Dserver.port=$PORT --app protobootapp
